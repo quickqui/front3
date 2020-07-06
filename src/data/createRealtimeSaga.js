@@ -1,4 +1,4 @@
-import realtimeSaga from "ra-realtime";
+// import realtimeSaga from "ra-realtime";
 
 const observeRequest = (realtimeResources, interval) => dataProvider => (
   type,
@@ -33,5 +33,5 @@ const observeRequest = (realtimeResources, interval) => dataProvider => (
   };
 };
 
-export default (resources, interval) => dataProvider =>
-  realtimeSaga(observeRequest(resources, interval)(dataProvider));
+export default (resources, interval) => dataProvider => undefined
+  // realtimeSaga(observeRequest(resources, interval)(dataProvider));

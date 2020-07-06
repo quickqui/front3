@@ -30,43 +30,46 @@ class App extends Component {
       );
       model.then((data) => {
         //TODO inject implementationGlobals
+        const model =  new ModelWrapped(data)
+        const functions = withoutAbstract(model.functionModel?.functions) ?? [];
+        const entityNames = (model.domainModel?.entities ?? []).map(
+          (entity) => entity.name
+        );
+
+        const resources = _(functions.map((fun) => fun.resource))
+          .concat(entityNames)
+          .compact()
+          .uniq()
+          .value();
+
         this.setState({
           ...this.state,
-          model: new ModelWrapped(data),
+          model,
+          resources,
         });
       });
     });
   }
 
   render() {
-    const { dataProvider, model } = this.state;
+    const { dataProvider, model, resources } = this.state;
 
-    if (!dataProvider || !model) {
+    // if (!dataProvider || !model || !resources || resources.length===0) {
+    if (!dataProvider || !model || !resources ) {
       return <div>Loading</div>;
     }
+   
 
-    const functions = withoutAbstract(model.functionModel?.functions) ?? [];
-    const entityNames = (model.domainModel?.entities ?? []).map(
-      (entity) => entity.name
-    );
-
-    const resources = _(functions.map((fun) => fun.resource))
-      .concat(entityNames)
-      .compact()
-      .uniq()
-      .value();
-    console.log(dataProvider[1]);
     return (
       <Admin
         customRoutes={customRoutes(model)}
         menu={Menu}
         dataProvider={dp3(dataProvider[0])}
-        customSagas={dataProvider[1]}
+        // customSagas={dataProvider[1]}
 
         // authProvider={authProvider}
       >
         {resources.map((resource) => {
-          console.log(resource);
           return (
             <Resource options={{ model }} name={resource} key={resource} />
           );

@@ -162,7 +162,7 @@ ContinuousEditingForm.defaultProps = {
 const enhance = compose(
   connect((state, props) => ({
     form: props.form || REDUX_FORM_NAME,
-    initialValues: getDefaultValues(state, props),
+    // initialValues: getDefaultValues(state, props),
     saving: props.saving || state.admin.saving,
   })),
   translate, // Must be before reduxForm so that it can be used in validation

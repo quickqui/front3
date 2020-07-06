@@ -74,7 +74,7 @@ class Menu extends PureComponent {
 
   render() {
     const { onMenuClick, resources, open } = this.props;
-    if (!resources) {
+    if (!resources || resources.length === 0) {
       return <div></div>;
     }
     const model = resources[0].options.model;
@@ -92,7 +92,7 @@ class Menu extends PureComponent {
 const mapStateToProps = state => ({
   open: state.admin.ui.sidebarOpen,
   theme: state.theme,
-  locale: state.i18n.locale,
+  // locale: state.i18n.locale,
   resources: getResources(state)
 });
 
