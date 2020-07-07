@@ -16,6 +16,8 @@ import dp3 from "./data/dp3";
 import { model } from "./Model/Model";
 
 import { dataProvider as dp } from "./data/dataProvider";
+import AutoSavingSaga from "./data/AutoSavingSaga";
+import { S_IFREG } from "constants";
 
 class App extends Component {
   constructor() {
@@ -25,12 +27,10 @@ class App extends Component {
   componentDidMount() {
     onInit().then(() => {
       //TODO 处理404，也就是model没有，但有logs。，包括要从其他错误中区分出来。
-      dp.then((dataProvider) =>
-        this.setState({ ...this.state, dataProvider: dataProvider })
-      );
+
       model.then((data) => {
         //TODO inject implementationGlobals
-        const model =  new ModelWrapped(data)
+        const model = new ModelWrapped(data);
         const functions = withoutAbstract(model.functionModel?.functions) ?? [];
         const entityNames = (model.domainModel?.entities ?? []).map(
           (entity) => entity.name
@@ -41,12 +41,17 @@ class App extends Component {
           .compact()
           .uniq()
           .value();
-
-        this.setState({
-          ...this.state,
-          model,
-          resources,
-        });
+          this.setState({
+            ...this.state,
+            model,
+            resources,
+          });
+        dp.then((dataProvider) =>
+          this.setState({
+            ...this.state,
+            dataProvider: dataProvider,
+          })
+        );
       });
     });
   }
@@ -55,17 +60,20 @@ class App extends Component {
     const { dataProvider, model, resources } = this.state;
 
     // if (!dataProvider || !model || !resources || resources.length===0) {
-    if (!dataProvider || !model || !resources ) {
+    if (!dataProvider || !model || !resources) {
+    // if (!model || !resources) {
       return <div>Loading</div>;
     }
-   
+    // if(!this.state?.admin?.resources){
+    //   return <div>Loading Resource</div>
+    // }
 
     return (
       <Admin
         customRoutes={customRoutes(model)}
         menu={Menu}
-        dataProvider={dp3(dataProvider[0])}
-        // customSagas={dataProvider[1]}
+        dataProvider={ dp3(dataProvider[0])}
+        customSagas={[...dataProvider[1],AutoSavingSaga]}
 
         // authProvider={authProvider}
       >

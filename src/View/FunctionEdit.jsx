@@ -5,6 +5,8 @@ import { FormPrefill } from "../Component/FormPrefill";
 import { editingFields } from "./EditingFields";
 import * as R from "ramda";
 import { withoutAbstract } from "@quick-qui/model-defines";
+import AutoSave from "./AutoSave";
+
 
 export const FunctionEdit = props => {
   const { functionModel, model, presentation } = props;
@@ -29,13 +31,16 @@ export const FunctionEdit = props => {
         prefill={{
           ...copyArgsToPrefill(),
           createdAt: undefined,
-          updatedAt: undefined
+          updatedAt: undefined,
         }}
       >
         <SimpleForm
           redirect={redirectFunction ? "/" + redirectFunction.name : "list"}
         >
-          {editingFields(entity, model, presentation)}
+          {/* <> */}
+            <AutoSave debounce ={1000} />
+            {editingFields(entity, model, presentation)}
+          {/* </> */}
         </SimpleForm>
       </FormPrefill>
     </Edit>

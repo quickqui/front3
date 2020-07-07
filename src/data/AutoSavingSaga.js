@@ -1,19 +1,24 @@
-import { takeLatest, put, takeEvery, take } from "redux-saga/effects";
+import { takeLatest, put, takeEvery, take, throttle } from "redux-saga/effects";
 
 export default function* () {
-    yield takeEvery("AUTO_SAVING_ON_CHANGE", saveIt);
+  yield throttle(1000,"AUTO_SAVING_ON_CHANGE", saveIt);
 }
 // function* saveIt2{l
 //     console.log('what?')
 // }
-
+export function autoSavingAction(resource, record,values) {
+  return {
+    type: "AUTO_SAVING_ON_CHANGE",
+    payload: { resource, record ,values},
+  };
+}
 export function saveItAction(autoSavingAction) {
-  const { record, source, value, resource } = autoSavingAction.payload;
+  const { record, values, resource } = autoSavingAction.payload;
   return {
     type: "RA/CRUD_UPDATE",
     payload: {
       id: record.id,
-      data: { ...record, [source]: value },
+      data: { ...record,...values },
       previousData: record,
     },
     meta: {
