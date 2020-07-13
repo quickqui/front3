@@ -15,28 +15,32 @@ import { StringComponent } from "../Component/StringComponent";
 import { applyPresentation, rulesHelp } from "./PresentationUtil";
 import { parseRefWithProtocolInsure } from "@quick-qui/model-defines";
 import { resolveWithOutDefault } from "../Resolve";
-import { injectAutoSavingHandler } from "./AutoSave";
+import { Field } from "react-final-form";
+
 function forProperty(property, model, prv) {
   const disabled = prv.isDisabled;
-  const autoSaving = prv.isAutoSaving;
-  let result = undefined;
   const component = prv.component;
   if (component) {
     const { path } = parseRefWithProtocolInsure(component);
     const ReactComponent = React.lazy(() => resolveWithOutDefault(path));
-    result = (
-      <ReactComponent
-        source={property.name}
-        property={property}
-        key={property.name}
-        addLabel={true}
-      />
+    return (
+      <Field name={property.name} key={property.name}>
+        {(props) => (
+          <ReactComponent
+            source={property.name}
+            property={property}
+            key={property.name}
+            addLabel={true}
+            {...props.input}
+          />
+        )}
+      </Field>
     );
   }
 
   if (model.isTypeRelation(property)) {
     if (model.isTypeList(property)) {
-      result = (
+      return (
         <ReferenceArrayInput
           label={property.name}
           source={property.name + "Ids"}
@@ -52,7 +56,7 @@ function forProperty(property, model, prv) {
         </ReferenceArrayInput>
       );
     } else {
-      result = (
+      return (
         <ReferenceInput
           label={property.name}
           source={property.name + ".id"}
@@ -71,7 +75,7 @@ function forProperty(property, model, prv) {
   }
   if (model.isTypeList(property)) {
     if (model.isTypeScalar(property)) {
-      result = (
+      return (
         <ArrayField
           source={property.name}
           key={property.name}
@@ -86,7 +90,7 @@ function forProperty(property, model, prv) {
         </ArrayField>
       );
     } else {
-      result = (
+      return (
         <ArrayField
           source={property.name}
           key={property.name}
@@ -102,20 +106,12 @@ function forProperty(property, model, prv) {
     }
   }
 
-  result = scalarInput({
+  return scalarInput({
     property,
     source: property.name,
     key: property.name,
     disabled,
   });
-  return result
-  // if (result) {
-  //   if (prv.isAutoSaving) {
-  //     return injectAutoSavingHandler(result);
-  //   } else {
-  //     return result;
-  //   }
-  // }
 }
 export function editingFieldsForCommand(functionModel, model, presentation) {
   //TODO functionModel.properties 是不存在的，有问题，需要更新。
