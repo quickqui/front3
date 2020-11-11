@@ -8,12 +8,12 @@ import {
   chain,
   forResource,
 } from "@quick-qui/data-provider";
-import {
-  withExchangeModel,
-  parseRefWithProtocolInsure,
-} from "@quick-qui/model-defines";
-
+import { parseRefWithProtocolInsure } from "@quick-qui/model-defines";
+import { withInfoModel, Info } from "@quick-qui/model-defines";
+import { createDataProvider as localStorageDp } from "./LocalStorageDp";
+import { createDataProvider as sessionStorageDp } from "./SessionStorageDp";
 import _ from "lodash";
+import { notNil } from "@quick-qui/util";
 
 const backEndDataProvider: DataProvider = (
   type: string,
@@ -26,36 +26,25 @@ const backEndDataProvider: DataProvider = (
 const thisEndDataProvider: Promise<
   { dataProvider: DataProvider; realtimeSagas: any[] } | undefined
 > = (async () => {
-  const exchangeModel = withExchangeModel(await model)?.exchangeModel;
-  const exchanges =
-    exchangeModel?.exchanges?.filter((exchange) => {
-      //TODO exchange to ==back的时候如何使用realtime？ 应该也可以realtime才对呀。
-      return exchange.to === "front"; //&& exchange.from !== "fake";
-      // return exchange.to === "back" //&& exchange.from !== "fake";
+  //TODO exchange to ==back的时候如何使用realtime？ 应该也可以realtime才对呀。
+
+  const infoModel = withInfoModel(await model)?.infoModel;
+  const infos =
+    infoModel?.infos.filter((info:Info) => {
+      //TODO 什么样的info大概会在front实现？
+      return (
+        info.type === "resource" &&
+        info.annotations?.implementation?.at === "front"
+      );
     }) ?? [];
-  if (_.isEmpty(exchanges)) return undefined;
-  const realtimeSagas = exchanges
-    .map((exchange) => {
-      const realtime = exchange.parameters?.["realtime"];
-      if (realtime) {
-        //TODO 支持多resource的exchange的realtime
-        //TODO realtimeSaga 好像被从ra3.0撤出了，看看之后怎么支持realtime
-        return [createRealtimeSaga(exchange.resources[0], realtime)];
-      } else {
-        return [];
-      }
-    })
-    .flat();
-  const providers = exchanges.map(async (exchange) => {
-    //TODO 支持extension以外的方式
-    const dataProvider = await resolve<DataProvider>(
-      parseRefWithProtocolInsure(exchange.annotations?.["implementation"]!).path
-    );
-    return forResource(exchange.resources, dataProvider);
-  });
+  if (_.isEmpty(infos)) return undefined;
+  const realtimeSagas: any[] = [];
+  const providers: Promise<DataProvider | undefined>[] = infos.map(
+    getDataProvider
+  );
 
   return Promise.all(providers)
-    .then((dataPS) => dataPS.reduce(chain))
+    .then((dataPS) => dataPS.filter(notNil).reduce(chain))
     .then((ps) => {
       return { dataProvider: ps, realtimeSagas: realtimeSagas };
     });
@@ -70,3 +59,20 @@ export const dataProvider: Promise<[
   const provider = dp ? chain(dp, backEndDataProvider) : backEndDataProvider;
   return [provider, realtimeSagas?.map((s) => s(provider)) ?? []];
 });
+
+async function getDataProvider(info: Info): Promise<DataProvider | undefined> {
+  let dataProvider: DataProvider | undefined = undefined;
+  if (info.annotations?.implementation?.source?.startsWith("resolve"))
+    dataProvider = await resolve<DataProvider>(
+      parseRefWithProtocolInsure(info.annotations?.implementation?.source).path
+    );
+  else if (info.annotations?.implementation?.source === "storage") {
+    if (info.scope === "local" || info.scope === "config") {
+      dataProvider = localStorageDp(info).value();
+    } else if (info.scope === "session") {
+      dataProvider = sessionStorageDp(info).value();
+    }
+  }
+  if (!dataProvider) return undefined;
+  return forResource(info.resources!, dataProvider!);
+}
