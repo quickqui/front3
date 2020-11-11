@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { List, Datagrid } from "react-admin";
 import { listingFields } from "./ListingFields";
 
@@ -6,7 +6,11 @@ import _ from "lodash";
 import * as R from "ramda";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { selectedChangedAction } from "../event/events";
+import {getEventName} from '../Util'
 const FunctionButton = ({ record, page, text }) => {
   return (
     <Button
@@ -16,8 +20,9 @@ const FunctionButton = ({ record, page, text }) => {
         pathname: "/" + page.name,
         //TODO id是否不应该特殊化。
         //TODO page如果有参数从这里传入。
-        
-        state: { id: record.id }
+
+        state: { id: record.id },
+        // hash:JSON.stringify({id:record.id})
       }}
     >
       {text}
@@ -25,8 +30,8 @@ const FunctionButton = ({ record, page, text }) => {
   );
 };
 
-export const FunctionList = props => {
-  const { model, functionModel,presentation } = props;
+const FunctionListIn = (props) => {
+  const { model, functionModel, presentation } = props;
   const resource = functionModel.resource;
   const location = { pathname: resource };
 
@@ -42,6 +47,8 @@ export const FunctionList = props => {
 
   const entity = model.entities.find(R.propEq("name", resource));
 
+  const theme = useTheme();
+  const [selectedId, setSelectedId] = useState(props.selectedId);
   return (
     <List
       location={location}
@@ -55,16 +62,38 @@ export const FunctionList = props => {
       sort={sort}
       {...props}
     >
-      <Datagrid>
-        {listingFields(entity, model,presentation)}
+      <Datagrid
+        rowClick={(id) => {
+          // eslint-disable-next-line no-unused-expressions
+          const infoE=functionModel?.parameters?.out?.selectedChanged
+          //TODO 支持更多的事件。
+          //TODO 如何综合到submit事件？ 等。
+          if ( infoE) {
+            const eventName = getEventName(model.original, /\$\{(.*)\}/.exec(infoE));
+            const _ = props?.dispatch?.(selectedChangedAction(id, "selectedChanged",eventName));
+          }
+          setSelectedId(id);
+          return
+        }}
+        rowStyle={(record) => {
+          return record.id === selectedId
+            ? { backgroundColor: theme.palette.action.selected }
+            : undefined;
+        }}
+      >
+        {listingFields(entity, model, presentation)}
         {functionModel.links
-          ?.filter(link => link.type === "entity")
-          ?.map(link => {
+          ?.filter((link) => link.type === "entity")
+          ?.map((link) => {
             const page = model.pageModel.pages.find(
-              page => page.name === link.page || page.name === `oneFunctionPage${link.page}`
+              (page) =>
+                page.name === link.page ||
+                page.name === `oneFunctionPage${link.page}`
             );
             if (page) {
-              return <FunctionButton key={page.name} page={page} text={link.label} />;
+              return (
+                <FunctionButton key={page.name} page={page} text={link.label} />
+              );
             } else {
               return undefined;
             }
@@ -73,3 +102,5 @@ export const FunctionList = props => {
     </List>
   );
 };
+
+export const FunctionList = connect()(FunctionListIn);
