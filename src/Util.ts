@@ -1,5 +1,7 @@
 import * as R from "ramda";
-
+import { Model } from "@quick-qui/model-core";
+import { withInfoModel, parseExpr, findInfo } from "@quick-qui/model-defines";
+import _ from "lodash";
 export interface TreeNode<T> {
   isDirectory: boolean;
   children: TreeNode<T>[];
@@ -32,7 +34,7 @@ export function filesToTreeNodes<T>(arr: WithPath<T>[]): TreeNode<T>[] {
         pathString:
           R.type(obj.path) === "String"
             ? (obj.path as string)
-            : (obj.path as string[]).join("/")
+            : (obj.path as string[]).join("/"),
       };
       if (i === splitPath.length - 1) {
         node.isDirectory = false;
@@ -43,7 +45,7 @@ export function filesToTreeNodes<T>(arr: WithPath<T>[]): TreeNode<T>[] {
     }
   }
   function objectToArr(node: any) {
-    Object.keys(node || {}).map(k => {
+    Object.keys(node || {}).map((k) => {
       if (node[k] && node[k].children) {
         objectToArr(node[k]);
       }
@@ -58,15 +60,35 @@ export function filesToTreeNodes<T>(arr: WithPath<T>[]): TreeNode<T>[] {
   return Object.values(tree);
 }
 
-
-export function filterObject(obj: any) {
-  const ret: any = {};
-  Object.keys(obj)
-    .filter(key => obj[key] !== undefined)
-    .forEach(key => (ret[key] = obj[key]));
-  return ret;
+export function evaluate(
+  model: Model,
+  context: object,
+  matchedResult: string[]
+): any {
+  const { scope, name, paths } = parseExpr(matchedResult[1]);
+  const withInfo = withInfoModel(model);
+  if (withInfo) {
+    const info = findInfo(withInfo, scope, name);
+    if (info?.type === "event") {
+      const obj = (context as any).event; //?.[name];
+      return _.get(obj, paths ?? []);
+    }
+  }
+  return undefined;
 }
 
-export function no(name: string) {
-  throw new Error(`env not found - ${name}`);
+export function getEventName(
+  model: Model,
+  matchedResult: string[]
+): string | undefined {
+  const { scope, name, paths } = parseExpr(matchedResult[1]);
+  const withInfo = withInfoModel(model);
+  if (withInfo) {
+    const info = findInfo(withInfo, scope, name);
+    console.log('info',info)
+    if (info?.type === "event") {
+      return info.name;
+    }
+  }
+  return undefined;
 }
