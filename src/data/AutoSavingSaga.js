@@ -1,4 +1,4 @@
-import { takeLatest, put, takeEvery, take, throttle } from "redux-saga/effects";
+import { put, throttle } from "redux-saga/effects";
 
 export default function* () {
   yield throttle(1000,"AUTO_SAVING_ON_CHANGE", saveIt);

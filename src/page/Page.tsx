@@ -33,18 +33,19 @@ export function getPage(page: Page, model: ModelWrapped, props: any) {
         presentation: compactList
  */
 
-  const grid = +page?.layout?.["grid"] ?? 3;
+  const grid = +(page?.layout?.["grid"] ?? 3); ;
   const gridStyle = {
     container: {
       display: "grid",
-      "grid-template-columns": "auto ".repeat(grid).trim()
+      gridTemplateColumns: "auto ".repeat(grid).trim()
+      // gridTemplateColumns: 'repeat(3,33.3%)'
     },
     item: {
       marginTop: "2em",
       marginRight: "2em"
     }
   };
-
+  const location = props.location
   return (
     <>
       <div style={gridStyle.container}>
