@@ -6,6 +6,7 @@ import { editingFields } from "./EditingFields";
 import * as R from "ramda";
 import { withoutAbstract } from "@quick-qui/model-defines";
 import AutoSave from "./AutoSave";
+import { isNullOrUndefined } from "util";
 
 
 export const FunctionEdit = props => {
@@ -25,6 +26,7 @@ export const FunctionEdit = props => {
     // console.log(re);
     return re;
   }
+  if(!id) return null
   return (
     <Edit basePath={basePath} resource={resource} id={id} {...props}>
       <FormPrefill
