@@ -6,7 +6,7 @@ import {
   StringKeyObject,
   Presentation,
   REF_RESOLVE,
-  parseRef
+  parseRef,
 } from "@quick-qui/model-defines";
 import { ModelWrapped } from "../Model";
 
@@ -33,23 +33,23 @@ export function getPage(page: Page, model: ModelWrapped, props: any) {
         presentation: compactList
  */
 
-  const grid = +(page?.layout?.["grid"] ?? 3); ;
+  const grid = +(page?.layout?.["grid"] ?? 3);
   const gridStyle = {
     container: {
       display: "grid",
-      gridTemplateColumns: "auto ".repeat(grid).trim()
+      gridTemplateColumns: "auto ".repeat(grid).trim(),
       // gridTemplateColumns: 'repeat(3,33.3%)'
     },
     item: {
       marginTop: "2em",
-      marginRight: "2em"
-    }
+      marginRight: "2em",
+    },
   };
-  const location = props.location
+  const location = props.location;
   return (
     <>
       <div style={gridStyle.container}>
-        {page.places.map(place => {
+        {page.places.map((place) => {
           const functionName = place.function;
           const fn = model.functions.find(
             (fun: Function) => functionName === fun.name
@@ -57,7 +57,7 @@ export function getPage(page: Page, model: ModelWrapped, props: any) {
           if (fn) {
             const size = place.layout?.size ?? 1;
             const itemStyle = {
-              gridColumn: `span ${size}`
+              gridColumn: `span ${size}`,
             };
             const presentation = findPresentation(
               model,
@@ -70,7 +70,7 @@ export function getPage(page: Page, model: ModelWrapped, props: any) {
                 key={fn.name}
                 style={{
                   ...gridStyle.item,
-                  ...itemStyle
+                  ...itemStyle,
                 }}
               >
                 {" "}
@@ -125,7 +125,7 @@ function getByFunction(
         model,
         presentation,
         // title,
-        ...props
+        ...props,
       });
     } else {
       throw new Error("can not find implementation type");

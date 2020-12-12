@@ -60,34 +60,20 @@ export function filesToTreeNodes<T>(arr: WithPath<T>[]): TreeNode<T>[] {
   return Object.values(tree);
 }
 
-export function evaluate(
-  model: Model,
-  context: object,
-  matchedResult: string[]
-): any {
-  const { scope, name, paths } = parseExpr(matchedResult[1]);
-  const withInfo = withInfoModel(model);
-  if (withInfo) {
-    const info = findInfo(withInfo, scope, name);
-    if (info?.type === "event") {
-      const obj = (context as any).event; //?.[name];
-      return _.get(obj, paths ?? []);
-    }
-  }
-  return undefined;
-}
+
 
 export function getEventName(
   model: Model,
   matchedResult: string[]
 ): string | undefined {
-  const { scope, name, paths } = parseExpr(matchedResult[1]);
-  const withInfo = withInfoModel(model);
-  if (withInfo) {
-    const info = findInfo(withInfo, scope, name);
-    console.log('info',info)
-    if (info?.type === "event") {
-      return info.name;
+  const { scheme, name } = parseExpr(matchedResult[1]);
+  if (scheme === "info") {
+    const withInfo = withInfoModel(model);
+    if (withInfo) {
+      const info = findInfo(withInfo, undefined, name);
+      if (info?.type === "event") {
+        return info.name;
+      }
     }
   }
   return undefined;

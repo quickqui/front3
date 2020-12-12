@@ -4,9 +4,9 @@ import { Show, SimpleShowLayout } from "react-admin";
 import { showingFields } from "./ShowingFields";
 import * as R from "ramda";
 
-import { replaceInObject } from "@quick-qui/util";
-import { evaluate } from "../Util";
 import { connectForEventListen } from "../event/events";
+
+import {evaluateInObject} from '@quick-qui/model-defines'
 
 const _FunctionShow = (props) => {
   const { functionModel, model, presentation } = props;
@@ -16,9 +16,9 @@ const _FunctionShow = (props) => {
   const parameters = functionModel.parameters;
 
   function normalizedParameters(parameters) {
-    return replaceInObject(parameters, /\$\{(.*)\}/, (result) =>
-      evaluate(model.original, { event: props.event?.payload }, result)
-    );
+    return evaluateInObject(parameters, model.original, {
+      event: props.event?.payload,
+    });
   }
   const id =
     props.location?.state?.id ??

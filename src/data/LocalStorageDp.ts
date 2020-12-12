@@ -1,11 +1,16 @@
 import { withDynamicData } from "@quick-qui/data-provider";
-import { Info } from "@quick-qui/model-defines";
+import { Info, implementationGlobal } from "@quick-qui/model-defines";
+import { evaluateInObject } from "@quick-qui/model-defines";
 
 function insureStorage(info: Info): object | undefined {
   const localStorageString = localStorage.getItem(`data-provider-${info.name}`);
   if (!localStorageString) {
-    if (info.init) {
-      writeToStorage(info, info.init);
+    if (info.default) {
+      const evaluatedDefault = evaluateInObject(info.default, undefined, {
+        env: implementationGlobal.env,
+        dp: implementationGlobal.dp
+      });
+      writeToStorage(info, evaluatedDefault);
       return insureStorage(info);
     }
     return undefined;
