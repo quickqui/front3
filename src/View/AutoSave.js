@@ -22,15 +22,15 @@ class AutoSave extends React.Component {
     if (this.promise) {
       await this.promise;
     }
-    const { values } = this.props;
-
+    const { values, pristine } = this.props;
+    if (pristine) return;
     // This diff step is totally optional
     // const difference = diff(this.state.values, values);
     // if (Object.keys(difference).length) {
     // values have changed
     this.setState({ submitting: true, values });
     this.promise = dispatch(
-      autoSavingAction(this.props.resource, this.props.record,values)
+      autoSavingAction(this.props.resource, this.props.record, values)
     );
     await this.promise;
     delete this.promise;
@@ -53,6 +53,10 @@ class AutoSave extends React.Component {
 // - Maintain state of when we are submitting
 // - Render a message when submitting
 // - Pass in debounce and save props nicely
-export default (props) =>
-    <FormSpy {...props} subscription={{ values: true }} component={connect()(AutoSave)} />
-  ;
+export default (props) => (
+  <FormSpy
+    {...props}
+    subscription={{ values: true, pristine: true }}
+    component={connect()(AutoSave)}
+  />
+);

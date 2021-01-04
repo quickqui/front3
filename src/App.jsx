@@ -42,7 +42,7 @@ class App extends Component {
         //TODO inject implementationGlobals
         //NOTE 需要指导自己是从哪个implementation 模型而来，参照app-server
         //NOTE 怎么才能从launcher把implementation name传过来？
-        console.log('env',env)
+        // console.log('env',env)
         const impl = withImplementationModel(
           data
         )?.implementationModel?.implementations.find(
@@ -52,12 +52,12 @@ class App extends Component {
           if (impl.injections?.includes("env")) {
             implementationGlobal["env"] = env;
           } else {
-            log.info("env injection is disable");
+            log.warn("env injection is disable");
           }
           if (impl.injections?.includes("dataProvider")) {
             implementationGlobal["dataProvider"] = (await dp)[0];
           } else {
-            log.info("dataProvider injection is disable");
+            log.warn("dataProvider injection is disable");
           }
         }
 
@@ -104,7 +104,7 @@ class App extends Component {
         menu={Menu}
         dataProvider={dp3(dataProvider[0])}
         customSagas={[...dataProvider[1], AutoSavingSaga]}
-        customReducers={{"eventLog":EventReducer}}
+        customReducers={{ eventLog: EventReducer }}
         history={history}
         // authProvider={authProvider}
       >
