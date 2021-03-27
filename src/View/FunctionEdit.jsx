@@ -8,15 +8,14 @@ import { withoutAbstract } from "@quick-qui/model-defines";
 import AutoSave from "./AutoSave";
 import { isNullOrUndefined } from "util";
 
-
-export const FunctionEdit = props => {
+export const FunctionEdit = (props) => {
   const { functionModel, model, presentation } = props;
   const resource = functionModel.resource;
   const basePath = "/" + resource;
   const entity = (model.entities ?? []).find(R.propEq("name", resource));
   const redirectFunction = functionModel.redirect
     ? withoutAbstract(model.functionModel.functions).find(
-        f => f.name === functionModel.redirect
+        (f) => f.name === functionModel.redirect
       )
     : undefined;
   const id = props.location?.state?.id ?? functionModel.parameters?.["id"];
@@ -26,7 +25,7 @@ export const FunctionEdit = props => {
     // console.log(re);
     return re;
   }
-  if(!id) return null
+  if (!id) return null;
   return (
     <Edit basePath={basePath} resource={resource} id={id} {...props}>
       <FormPrefill
@@ -39,10 +38,8 @@ export const FunctionEdit = props => {
         <SimpleForm
           redirect={redirectFunction ? "/" + redirectFunction.name : "list"}
         >
-          {/* <> */}
-            <AutoSave debounce ={1000} />
-            {editingFields(entity, model, presentation)}
-          {/* </> */}
+          <AutoSave debounce={1000} />
+          {editingFields(entity, model, presentation)}
         </SimpleForm>
       </FormPrefill>
     </Edit>

@@ -13,3 +13,5 @@
 1. 访问[model-server](http://github.com/quickqui/model-server)获得模型。
 1. 根据模型进行动态渲染和实现交互能力。
 
+TODO recompose 系列似乎有点各种过期了。抽时间研究。
+TODO create-react-app react-scripts react-app-rewired 系列似乎有点各种过期了。抽时间研究。
