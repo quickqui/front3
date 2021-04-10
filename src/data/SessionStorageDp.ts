@@ -7,7 +7,7 @@ function insureStorage(info: Info): object | undefined {
   );
   if (!sessionStorageString) {
     if (info.default) {
-      const evaluatedDefault = evaluateInObject(info.default, undefined, {
+      const evaluatedDefault = evaluateInObject(info.default, {
         env: implementationGlobal.env,
         dp: implementationGlobal.dp,
       });

@@ -16,8 +16,9 @@ const _FunctionShow = (props) => {
   const parameters = functionModel.parameters;
 
   function normalizedParameters(parameters) {
-    return evaluateInObject(parameters, model.original, {
+    return evaluateInObject(parameters, {
       event: props.event?.payload,
+      model: model.original,
     });
   }
   const id =

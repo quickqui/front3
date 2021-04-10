@@ -4,6 +4,7 @@
   "dependencies": {
     "@material-ui/icons": "^4.11.2",
     "@quick-qui/data-provider": "^1.4.1",
+    "@quick-qui/model-core": "^2.1.0",
     "@quick-qui/model-defines": "^2.7.1",
     "@quick-qui/util": "^1.2.0",
     "@types/chart.js": "^2.9.28",
