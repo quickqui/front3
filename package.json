@@ -18,7 +18,7 @@
     "@types/recompose": "^0.30.7",
     "@types/redux-saga": "^0.10.5",
     "@types/uuid": "^8.3.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "chart.js": "^2.9.4",
     "customize-cra": "^0.9.1",
     "graphql": "^14.7.0",
