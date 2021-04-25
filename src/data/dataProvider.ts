@@ -78,9 +78,9 @@ async function getDataProvider(info: Info): Promise<DataProvider | undefined> {
     );
   else if (info.annotations?.implementation?.source === "storage") {
     if (info.scope === "local" || info.scope === "config") {
-      dataProvider = localStorageDp(info).value();
+      dataProvider =await localStorageDp(info)
     } else if (info.scope === "session") {
-      dataProvider = sessionStorageDp(info).value();
+      dataProvider = await sessionStorageDp(info)
     }
   }
   if (!dataProvider) return undefined;

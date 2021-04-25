@@ -116,7 +116,7 @@ function forProperty(property, model, prv) {
 export function editingFieldsForCommand(functionModel, model, presentation) {
   //TODO functionModel.properties 是不存在的，有问题，需要更新。
   const properties = functionModel.properties ?? [];
-  applyPresentation(presentation, properties).map((property) =>
+  return applyPresentation(presentation, properties).map((property) =>
     forProperty(property, model, rulesHelp(presentation, property))
   );
 }
