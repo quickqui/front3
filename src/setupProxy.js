@@ -16,6 +16,7 @@ module.exports = function (app) {
       pathRewrite: {
         "^/app-server": "/",
       },
+      ws:true
     })
   );
 };

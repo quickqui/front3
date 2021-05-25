@@ -4,10 +4,8 @@ import { FormPrefill } from "../Component/FormPrefill";
 
 import { editingFields } from "./EditingFields";
 import * as R from "ramda";
-import { withoutAbstract } from "@quick-qui/model-defines";
+import { withoutAbstract, validation } from "@quick-qui/model-defines";
 import AutoSave from "./AutoSave";
-import { isNullOrUndefined } from "util";
-
 export const FunctionEdit = (props) => {
   const { functionModel, model, presentation } = props;
   const resource = functionModel.resource;
@@ -26,6 +24,10 @@ export const FunctionEdit = (props) => {
     return re;
   }
   if (!id) return null;
+
+  const validate = entity ? validation(entity) : (values) => {};
+
+  
   return (
     <Edit basePath={basePath} resource={resource} id={id} {...props}>
       <FormPrefill
@@ -37,6 +39,7 @@ export const FunctionEdit = (props) => {
       >
         <SimpleForm
           redirect={redirectFunction ? "/" + redirectFunction.name : "list"}
+          validation={validate}
         >
           <AutoSave debounce={1000} />
           {editingFields(entity, model, presentation)}

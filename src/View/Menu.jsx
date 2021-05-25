@@ -43,6 +43,7 @@ class Menu extends PureComponent {
   };
 
   toElement = (treeNode, open, onMenuClick) => {
+    //FIXME 无法安排即是目录又挂有object的情况， 比如有/m/a 和 /m两个功能的时候，m就既是目录又挂有object
     if (treeNode.isDirectory) {
       return (
         <SubMenu

@@ -5,7 +5,6 @@ import { ModelWrapped } from "../Model";
 export function findPresentation(
   model: ModelWrapped,
   presentationName: string | undefined,
-  resourceName: string
 ): Presentation | undefined {
   const presentations = model?.presentationModel?.presentations;
   const re = presentations?.find(
@@ -43,6 +42,7 @@ export interface PropertyRuleView {
   isHidden: boolean;
   isDisabled: boolean;
   isAutoSaving: boolean;
+  isFullWidth: boolean;
   component: string | undefined;
 }
 
@@ -58,6 +58,7 @@ export function rulesHelp(
     isHidden: rule?.rules?.includes("hidden") ?? false,
     isDisabled: rule?.rules?.includes("disabled") ?? false,
     isAutoSaving: rule?.rules?.includes("autoSaving") ?? false,
+    isFullWidth: rule?.rules?.includes("fullWidth") ?? false,
     component: rule?.rules?.find((it) => it.startsWith("resolve:")),
   };
 }

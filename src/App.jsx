@@ -11,6 +11,7 @@ import { onInit } from "./life/frontLife";
 
 import customRoutes from "./customRoutes";
 import authProvider from "./authProvider";
+import {wsSagas} from './socket'
 
 import { implementationGlobal } from "@quick-qui/model-defines";
 
@@ -103,8 +104,8 @@ class App extends Component {
         customRoutes={customRoutes(model)}
         menu={Menu}
         dataProvider={dp3(dataProvider[0])}
-        customSagas={[...dataProvider[1], AutoSavingSaga]}
-        customReducers={{ eventLog: EventReducer }}
+        customSagas={[...dataProvider[1], AutoSavingSaga, wsSagas]}
+        customReducers={{ events: EventReducer }}
         history={history}
         // authProvider={authProvider}
       >

@@ -19,12 +19,13 @@ import { Field } from "react-final-form";
 
 function forProperty(property, model, prv) {
   const disabled = prv.isDisabled;
+  const fullWidth = prv.isFullWidth;
   const component = prv.component;
   if (component) {
     const { path } = parseRefWithProtocolInsure(component);
     const ReactComponent = React.lazy(() => resolveWithOutDefault(path));
     return (
-      <Field name={property.name} key={property.name}>
+      <Field name={property.name} key={property.name} fullWidth={fullWidth}>
         {(props) => (
           <ReactComponent
             source={property.name}
@@ -105,11 +106,11 @@ function forProperty(property, model, prv) {
       );
     }
   }
-
   return scalarInput({
     property,
     source: property.name,
     key: property.name,
+    fullWidth,
     disabled,
   });
 }

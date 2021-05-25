@@ -15,5 +15,8 @@
         "titleBar.inactiveBackground": "#d2fe1499",
         "titleBar.inactiveForeground": "#15202b99"
     },
-    "peacock.color": "#d2fe14"
+    "peacock.color": "#d2fe14",
+    "files.watcherExclude": {
+        "**/target": true
+    }
 }

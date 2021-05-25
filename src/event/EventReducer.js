@@ -1,10 +1,11 @@
-
-export default (previousState = {}, event) => {
-  if (event.type.startsWith("QQ/EVENT/")) {
+const reduce = (previousState = {}, eventAction) => {
+  if (eventAction.type.startsWith("QQ/EVENT/")) {
     return {
       ...previousState,
-      [event.type]: [...(previousState[event.type] ?? []), event],
+      // [eventAction.type]: [...(previousState[eventAction.type] ?? []), eventAction.payload.event],
+      eventLog:[...(previousState.eventLog??[]), eventAction.payload.event]
     };
   }
   return previousState;
 };
+export default reduce;

@@ -7,7 +7,7 @@ import {
 } from "react-admin";
 import { request } from "graphql-request";
 
-export default (type, params) => {
+const p= (type, params) => {
   if (type === AUTH_LOGIN) {
     const { username, password } = params;
     //TODO 应该用username登陆，比较符合中国习惯。
@@ -73,3 +73,4 @@ export default (type, params) => {
   }
   return Promise.reject("Unknown method");
 };
+export default p

@@ -17,7 +17,7 @@ import { FunctionCommand } from "../View/FunctionCommand";
 import { FunctionShow } from "../View/FunctionShow";
 import { IconCardView } from "../View/IconCardView";
 import { findPresentation } from "../View/PresentationUtil";
-import { resolveWithOutDefault } from "../Resolve";
+import { resolve } from "../Resolve";
 
 export function getPage(page: Page, model: ModelWrapped, props: any) {
   //TODO 目前只考虑支持流式布局
@@ -62,7 +62,6 @@ export function getPage(page: Page, model: ModelWrapped, props: any) {
             const presentation = findPresentation(
               model,
               place.presentation,
-              fn.resource
             );
 
             return (
@@ -99,27 +98,35 @@ function getByFunction(
     let type: any;
     const { protocol, path } = parseRef(baseFunction);
     if (protocol === REF_RESOLVE) {
-      type = React.lazy(() => resolveWithOutDefault(path));
+      type = React.lazy(() => resolve(path));
+      return React.createElement(type, {
+        key: fun.name,
+        functionModel: fun,
+        model,
+        presentation,
+        // title,
+        ...props,
+      });
     } else {
       const { category, name } = getNameWithCategory(baseFunction);
       if (category === "provided") {
         const mapToType: StringKeyObject = {
-          command: FunctionCommand,
-          create: FunctionCreate,
-          edit: FunctionEdit,
-          list: FunctionList,
-          show: FunctionShow,
-          view: FunctionShow,
-          iconCard: IconCardView,
+          command: () => FunctionCommand,
+          create: () => FunctionCreate,
+          edit: () => FunctionEdit,
+          list: () => FunctionList(fun, model, presentation),
+          show: () => FunctionShow(fun, model, presentation),
+          view: () => FunctionShow(fun, model, presentation),
+          iconCard: () => IconCardView,
         };
-        type = mapToType[name];
+        type = mapToType[name]
         if (!type) {
           throw new Error(`not supported function - ${name}`);
         }
       }
     }
     if (type) {
-      return React.createElement(type, {
+      return React.createElement(type(), {
         key: fun.name,
         functionModel: fun,
         model,
