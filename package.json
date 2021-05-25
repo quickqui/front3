@@ -1,6 +1,6 @@
 {
   "name": "@quick-qui/front3",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "dependencies": {
     "@material-ui/icons": "^4.11.2",
     "@quick-qui/data-provider": "^1.6.2",
@@ -47,7 +47,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "start-without-clean": "FORCE_COLOR=true npm start | cat",
-    "product-start":"node run-product.js",
+    "product-start": "node run-product.js",
     "build": "react-app-rewired build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
