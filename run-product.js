@@ -5,7 +5,7 @@ const app = express();
 const port = 3000;
 
 app.use(express.static("build"));
-const setP = require("src/setupProxy");
+const setP = require("./src/setupProxy");
 setP(app);
 app.listen(port, () => {
   console.log(`server started, listening at http://localhost:${port}`);

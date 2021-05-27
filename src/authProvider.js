@@ -5,7 +5,7 @@ import {
   AUTH_LOGOUT,
   AUTH_GET_PERMISSIONS
 } from "react-admin";
-import { request } from "graphql-request";
+// import { request } from "graphql-request";
 
 const p= (type, params) => {
   if (type === AUTH_LOGIN) {
@@ -24,14 +24,14 @@ const p= (type, params) => {
     }
 }
   `;
-    request("/app", query, { username, password })
-      .then(data => {
-        console.log(data);
-        return data;
-      })
-      .then(data => {
-        localStorage.setItem("login", JSON.stringify(data.login));
-      });
+    // request("/app", query, { username, password })
+    //   .then(data => {
+    //     console.log(data);
+    //     return data;
+    //   })
+    //   .then(data => {
+    //     localStorage.setItem("login", JSON.stringify(data.login));
+    //   });
     //TODO 没有测试login失败的情况。
     // const request = new Request('https://mydomain.com/authenticate', {
     //     method: 'POST',
