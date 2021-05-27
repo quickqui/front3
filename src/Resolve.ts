@@ -10,9 +10,9 @@ export const resolve = <T extends unknown>(path: string): Promise<any> => {
     (obj) => {
       console.dir(obj);
       console.log(obj);
-      // return _interopRequireDefault(obj).default as T;
+      return _interopRequireDefault(obj).default as T;
       // return (obj as any).default as T
-      return obj as any as T;
+      // return obj as any as T;
     },(e)=>{console.log(e)}
   );
 };

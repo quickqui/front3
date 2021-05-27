@@ -10,7 +10,7 @@ import {
   DELETE,
   DELETE_MANY,
 } from "@quick-qui/data-provider";
-export default (dp2: DataProvider) => ({
+const re = (dp2: DataProvider) => ({
   getList: (resource: any, params: any) => dp2(GET_LIST, resource, params),
   getOne: (resource: any, params: any) => dp2(GET_ONE, resource, params),
 
@@ -31,3 +31,4 @@ export default (dp2: DataProvider) => ({
   deleteMany: (resource: any, params: any) =>
     dp2(DELETE_MANY, resource, params),
 });
+export default re;
