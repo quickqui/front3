@@ -48,6 +48,7 @@
     "start-without-clean": "FORCE_COLOR=true npm start | cat",
     "product-start": "node run-product.js",
     "build": "react-app-rewired build",
+    "product-build": "node build-product.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "docker:build": "cross-conf-env docker image build . -t $npm_package_config_imageRepo:$npm_package_version",
