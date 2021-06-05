@@ -9,6 +9,9 @@ const builtPath = process.env.BUILT_PATH;
 console.log("port :>> ", port);
 console.log(`builtPath`, builtPath);
 app.use(express.static(builtPath));
+app.get("/runtimeEnv", (req, res) => {
+  res.status(200).json(process.env);
+});
 const setP = require("./src/setupProxy");
 setP(app);
 app.listen(port, () => {

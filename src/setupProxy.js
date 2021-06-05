@@ -19,4 +19,8 @@ module.exports = function (app) {
       ws:true
     })
   );
+
+  app.get("/runtimeEnv", (req, res) => {
+    res.status(200).json(process.env);
+  });
 };

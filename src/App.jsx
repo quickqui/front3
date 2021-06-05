@@ -43,10 +43,13 @@ class App extends Component {
         //NOTE 需要指导自己是从哪个implementation 模型而来，参照app-server
         //NOTE 怎么才能从launcher把implementation name传过来？
         // console.log('env',env)
+        const e =(await env)
+        console.log("env in did mount -")
+        console.log(e)
         const impl = withImplementationModel(
           data
         )?.implementationModel?.implementations.find(
-          (implementation) => implementation.name === env.implementationName
+          (implementation) => implementation.name === e.implementationName
         );
         if (impl) {
           console.log("implementation", impl);
