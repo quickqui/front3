@@ -10,7 +10,7 @@ import Menu from "./View/Menu";
 import { onInit } from "./life/frontLife";
 
 import customRoutes from "./customRoutes";
-import {wsSagas} from './socket'
+import { wsSagas } from "./socket";
 
 import { implementationGlobal } from "@quick-qui/model-defines";
 
@@ -49,13 +49,16 @@ class App extends Component {
           (implementation) => implementation.name === env.implementationName
         );
         if (impl) {
+          console.log("implementation", impl);
           if (impl.injections?.includes("env")) {
             implementationGlobal["env"] = env;
           } else {
             log.warn("env injection is disable");
           }
           if (impl.injections?.includes("dataProvider")) {
-            implementationGlobal["dataProvider"] = (await dp)[0];
+            const re = (await dp)[0];
+            console.log("dataP inject", re);
+            implementationGlobal["dataProvider"] = re;
           } else {
             log.warn("dataProvider injection is disable");
           }
