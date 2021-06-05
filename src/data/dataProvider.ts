@@ -72,10 +72,12 @@ export const dataProvider: Promise<
 
 async function getDataProvider(info: Info): Promise<DataProvider | undefined> {
   let dataProvider: DataProvider | undefined = undefined;
-  if (info.annotations?.implementation?.source?.startsWith("resolve"))
+  if (info.annotations?.implementation?.source?.startsWith("resolve")){
     dataProvider = await resolve<DataProvider>(
       parseRefWithProtocolInsure(info.annotations?.implementation?.source).path
     );
+    console.log(dataProvider)
+  }
   else if (info.annotations?.implementation?.source === "storage") {
     if (info.scope === "local" || info.scope === "config") {
       dataProvider =await localStorageDp(info)

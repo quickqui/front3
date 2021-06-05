@@ -10,9 +10,10 @@ function _interopRequireDefault(obj: any) {
 export const resolve = <T extends unknown>(path: string): Promise<any> => {
   return resolveWithOutDefault(path).then(
     (obj) => {
-      console.dir(obj);
       console.log(obj);
-      return _interopRequireDefault(obj).default as T;
+      const re = _interopRequireDefault(obj).default;
+      console.log(re)
+      return re as T;
       // return (obj as any).default as T
       // return obj as any as T;
     },(e)=>{console.log(e)}
