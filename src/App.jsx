@@ -10,7 +10,6 @@ import Menu from "./View/Menu";
 import { onInit } from "./life/frontLife";
 
 import customRoutes from "./customRoutes";
-import authProvider from "./authProvider";
 import {wsSagas} from './socket'
 
 import { implementationGlobal } from "@quick-qui/model-defines";

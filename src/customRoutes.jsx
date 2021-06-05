@@ -4,9 +4,9 @@ import { Route } from "react-router-dom";
 
 import { getPage } from "./page/Page";
 
-export default function(model) {
+function r(model) {
   return (model.pageModel?.pages ?? [])
-    .map(page => {
+    .map((page) => {
       return getRoute(page, model);
     })
     .flat();
@@ -17,7 +17,9 @@ function getRoute(page, model) {
       exact
       path={"/" + page.name}
       key={page.name}
-      render={props => getPage(page, model, props)}
+      render={(props) => getPage(page, model, props)}
     />
   );
 }
+
+export default r;

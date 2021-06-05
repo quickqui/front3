@@ -9,7 +9,7 @@ import { editingFields } from "./EditingFields";
 const CommandToolbar = (props) => {
   const { functionModel, model } = props;
   const redirectFunction = withoutAbstract(model.functionModel.functions).find(
-    (f) => f.name === functionModel.command.redirect
+    (f) => f.name === functionModel?.command?.redirect
   );
   return (
     <Toolbar {...props}>
