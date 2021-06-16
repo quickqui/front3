@@ -12,11 +12,14 @@ import { onInit } from "./life/frontLife";
 import customRoutes from "./customRoutes";
 import { wsSagas } from "./socket";
 
-import { implementationGlobal } from "@quick-qui/model-defines";
+import {
+  implementationGlobal,
+  withImplementationModel,
+} from "@quick-qui/implementation-model";
 
 import {
   withoutAbstract,
-  withImplementationModel,
+  
 } from "@quick-qui/model-defines";
 import dp3 from "./data/dp3";
 

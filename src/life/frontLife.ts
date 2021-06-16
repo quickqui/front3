@@ -1,10 +1,11 @@
 import { resolve } from "../Resolve";
 import { model } from "../Model/Model";
 import {
-  withImplementationModel,
-  Implementation,
+  
   parseRefWithProtocolInsure,
-} from "@quick-qui/model-defines/";
+} from "@quick-qui/model-defines";
+import {withImplementationModel,
+  Implementation,} from '@quick-qui/implementation-model'
 import { env } from "../Env";
 
 export const onInit = async () => {

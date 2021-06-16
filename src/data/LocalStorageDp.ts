@@ -1,5 +1,6 @@
 // import { withDynamicData } from "@quick-qui/data-provider";
-import { Info, implementationGlobal } from "@quick-qui/model-defines";
+import { Info } from "@quick-qui/model-defines";
+import { implementationGlobal } from "@quick-qui/implementation-model";
 import { evaluateInObject } from "@quick-qui/model-defines";
 import { localStorageDp } from "@quick-qui/data-provider";
 // function insureStorage(info: Info): object | undefined {
