@@ -29,7 +29,18 @@ const modelDataProvider: DataProvider = (
   params: DataProviderParams<any>
 ) => {
   const json = { type, resource, params };
-  return axios.post(`/model-server/dataProvider`, json).then((r) => r.data);
+  return axios
+    .post(`/model-server/dataProvider`, json)
+    .then((r) => r.data)
+    .catch(function (error) {
+      if (error.response) {
+        // Request made and server responded
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+      throw new Error(error.message)
+    });
 };
 const thisEndDataProvider: Promise<
   { dataProvider: DataProvider; realtimeSagas: any[] } | undefined
@@ -47,9 +58,8 @@ const thisEndDataProvider: Promise<
     }) ?? [];
   if (_.isEmpty(infos)) return undefined;
   const realtimeSagas: any[] = [];
-  const providers: Promise<DataProvider | undefined>[] = infos.map(
-    getDataProvider
-  );
+  const providers: Promise<DataProvider | undefined>[] =
+    infos.map(getDataProvider);
 
   return Promise.all(providers)
     .then((dataPS) => dataPS.filter(notNil).reduce(chain))
@@ -58,31 +68,29 @@ const thisEndDataProvider: Promise<
     });
 })();
 
-export const dataProvider: Promise<
-  [DataProvider, any[]]
-> = thisEndDataProvider.then((dpr) => {
-  const dp = dpr?.dataProvider;
-  const realtimeSagas = dpr?.realtimeSagas;
-  const provider = chain(
-    dp ? chain(dp, backEndDataProvider) : backEndDataProvider,
-    modelDataProvider
-  );
-  return [provider, realtimeSagas?.map((s) => s(provider)) ?? []];
-});
+export const dataProvider: Promise<[DataProvider, any[]]> =
+  thisEndDataProvider.then((dpr) => {
+    const dp = dpr?.dataProvider;
+    const realtimeSagas = dpr?.realtimeSagas;
+    const provider = chain(
+      dp ? chain(dp, backEndDataProvider) : backEndDataProvider,
+      modelDataProvider
+    );
+    return [provider, realtimeSagas?.map((s) => s(provider)) ?? []];
+  });
 
 async function getDataProvider(info: Info): Promise<DataProvider | undefined> {
   let dataProvider: DataProvider | undefined = undefined;
-  if (info.annotations?.implementation?.source?.startsWith("resolve")){
+  if (info.annotations?.implementation?.source?.startsWith("resolve")) {
     dataProvider = await resolve<DataProvider>(
       parseRefWithProtocolInsure(info.annotations?.implementation?.source).path
     );
-    console.log(dataProvider)
-  }
-  else if (info.annotations?.implementation?.source === "storage") {
+    console.log(dataProvider);
+  } else if (info.annotations?.implementation?.source === "storage") {
     if (info.scope === "local" || info.scope === "config") {
-      dataProvider =await localStorageDp(info)
+      dataProvider = await localStorageDp(info);
     } else if (info.scope === "session") {
-      dataProvider = await sessionStorageDp(info)
+      dataProvider = await sessionStorageDp(info);
     }
   }
   if (!dataProvider) return undefined;

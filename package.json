@@ -3,7 +3,7 @@
   "version": "2.4.14",
   "dependencies": {
     "@material-ui/icons": "^4.11.2",
-    "@quick-qui/data-provider": "^1.7.0",
+    "@quick-qui/data-provider": "^1.7.2",
     "@quick-qui/implementation-model": "^1.10.3",
     "@quick-qui/model-core": "^2.1.2",
     "@quick-qui/model-defines": "^2.8.0",
