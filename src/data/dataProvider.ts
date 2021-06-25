@@ -21,7 +21,18 @@ const backEndDataProvider: DataProvider = (
   params: DataProviderParams<any>
 ) => {
   const json = { type, resource, params };
-  return axios.post(`/app-server/dataProvider`, json).then((r) => r.data);
+  return axios
+    .post(`/app-server/dataProvider`, json)
+    .then((r) => r.data)
+    .catch(function (error) {
+      if (error.response) {
+        // Request made and server responded
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+      throw new Error(error.response.data.error );
+    });;
 };
 const modelDataProvider: DataProvider = (
   type: string,
@@ -39,7 +50,7 @@ const modelDataProvider: DataProvider = (
         console.log(error.response.status);
         console.log(error.response.headers);
       }
-      throw new Error(error.message)
+      throw new Error(error.response.data.error);
     });
 };
 const thisEndDataProvider: Promise<
