@@ -19,7 +19,7 @@ import {
 
 import {
   withoutAbstract,
-  
+  withInfoModel,getResources
 } from "@quick-qui/model-defines";
 import dp3 from "./data/dp3";
 
@@ -71,16 +71,18 @@ class App extends Component {
         }
 
         const model = new ModelWrapped(data);
-        const functions = withoutAbstract(model.functionModel?.functions) ?? [];
-        const entityNames = (model.domainModel?.entities ?? []).map(
-          (entity) => entity.name
-        );
+        // const functions = withoutAbstract(model.functionModel?.functions) ?? [];
+        // const entityNames = (model.domainModel?.entities ?? []).map(
+        //   (entity) => entity.name
+        // );
 
-        const resources = _(functions.map((fun) => fun.resource))
-          .concat(entityNames)
-          .compact()
-          .uniq()
-          .value();
+        // const resources = _(functions.map((fun) => fun.resource))
+        //   .concat(entityNames)
+        //   .compact()
+        //   .uniq()
+        //   .value();
+        const infoModel = withInfoModel(model.original)?.infoModel;
+        const resources = infoModel ? getResources(infoModel) : [];
         this.setState({
           ...this.state,
           model,

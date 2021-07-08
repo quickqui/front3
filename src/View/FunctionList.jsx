@@ -48,7 +48,7 @@ const FunctionListIn = (functionModel, model, presentation) => {
       })
       .value()[0];
 
-  const entity = model.entities.find(R.propEq("name", resource));
+  const entity = model.getEntityFromResource(resource);
   const parameters = functionModel.parameters;
 
   const FL = (props) => {

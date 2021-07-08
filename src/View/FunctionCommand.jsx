@@ -24,7 +24,8 @@ export const FunctionCommand = (props) => {
   const { functionModel, model, presentation } = props;
   const resource = functionModel.resource;
   const basePath = "/" + resource;
-  const entity = (model.entities ?? []).find(R.propEq("name", resource));
+  // const entity = (model.entities ?? []).find(R.propEq("name", resource));
+  const entity = model.getEntityFromResource(resource);
   
   function copyArgsToPrefill() {
     const prefill = functionModel.command?.prefill ?? {};

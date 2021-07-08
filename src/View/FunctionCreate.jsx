@@ -10,7 +10,7 @@ export const FunctionCreate = (props) => {
   const { functionModel, model, presentation } = props;
   const resource = functionModel.resource;
   const basePath = "/" + resource;
-  const entity = (model.entities ?? []).find(R.propEq("name", resource));
+  const entity = model.getEntityFromResource(resource);
   const redirectFunction = withoutAbstract(model.functionModel.functions).find(
     (f) => f.name === functionModel.redirect
   );

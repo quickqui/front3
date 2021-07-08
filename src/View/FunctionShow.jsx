@@ -11,7 +11,7 @@ import { findInfos, getEventNames } from "@quick-qui/model-defines";
 const _FunctionShow = (functionModel, model, presentation) => {
   const resource = functionModel.resource;
   const basePath = "/" + resource;
-  const entity = (model.entities ?? []).find(R.propEq("name", resource));
+  const entity = model.getEntityFromResource(resource);
   const parameters = functionModel.parameters;
   const FS = (props) => {
     function normalizedParameters(parameters) {

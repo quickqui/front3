@@ -10,21 +10,22 @@ import {
   Property,
   PageModel,
   PresentationModel,
-  ExchangeModel,
-  withoutAbstract
+  withoutAbstract,
+  InfoModel,
+  findResource,
 } from "@quick-qui/model-defines";
 import { FunctionModel, Function } from "@quick-qui/model-defines";
 
 export const model: Promise<object> = axios
   .get("/model-server/models/default")
-  .then(_ => _.data);
+  .then((_) => _.data);
 
 export class ModelWrapped {
   readonly domainModel: DomainModel;
   readonly functionModel: FunctionModel;
   readonly pageModel: PageModel;
   readonly presentationModel: PresentationModel;
-  readonly exchangeModel: ExchangeModel;
+  readonly infoModel: InfoModel;
   readonly original: any;
 
   constructor(model: {
@@ -33,24 +34,29 @@ export class ModelWrapped {
     functionModel: FunctionModel;
     pageModel: PageModel;
     presentationModel: PresentationModel;
-    exchangeModel: ExchangeModel;
+    infoModel: InfoModel;
   }) {
     this.domainModel = model.domainModel;
     this.functionModel = model.functionModel;
     this.pageModel = model.pageModel;
     this.presentationModel = model.presentationModel;
-    this.exchangeModel =  model.exchangeModel;
+    this.infoModel = model.infoModel;
     this.original = model;
   }
 
   get entities(): Entity[] {
-    return (this.domainModel.entities) ?? [];
+    return this.domainModel.entities ?? [];
   }
 
   get functions(): Function[] {
-    return withoutAbstract(this.functionModel.functions )?? [];
+    return withoutAbstract(this.functionModel.functions) ?? [];
   }
-
+  getEntityFromResource(resource: string): Entity | undefined {
+    const entityName = findResource(this.infoModel, resource)?.[2];
+    return entityName
+      ? this.entities.find((entity) => entity.name === entityName)
+      : undefined;
+  }
   isList(object: any): object is List {
     if (_.isNil(object)) return false;
     if (_.isString(object)) return false;
@@ -99,7 +105,7 @@ export class ModelWrapped {
         "Float",
         "Boolean",
         "DateTime",
-        "ID"
+        "ID",
       ];
 
       if (this.isList(property.type)) return false;

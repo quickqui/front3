@@ -6,7 +6,7 @@
     "@quick-qui/data-provider": "^1.7.2",
     "@quick-qui/implementation-model": "^1.10.3",
     "@quick-qui/model-core": "^2.1.2",
-    "@quick-qui/model-defines": "^2.8.0",
+    "@quick-qui/model-defines": "^2.9.2",
     "@quick-qui/util": "^1.5.1",
     "@types/express": "^4.17.12",
     "@types/http-proxy": "^1.17.6",
