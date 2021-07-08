@@ -1,6 +1,6 @@
 {
   "name": "@quick-qui/front3",
-  "version": "2.4.16",
+  "version": "2.5.0",
   "dependencies": {
     "@material-ui/icons": "^4.11.2",
     "@quick-qui/data-provider": "^1.7.2",
