@@ -75,79 +75,87 @@ const FunctionListIn = (functionModel, model, presentation) => {
         });
       }
     });
-    return (
-      <List
-        location={location}
-        basePath={basePath}
-        resource={resource}
-        hasCreate={false}
-        hasEdit={false}
-        hasList={false}
-        hasShow={false}
-        filter={filter}
-        //TODO filters没那么紧急，filter比较紧急，filter用来functions之间传递协作，filters用来用户输入。
-        // https://marmelab.com/react-admin/List.html#filters-filter-inputs
-        // functionModel里面没有filters，只有filter，原因如上所述。用户输入属于function实现的一部分，而filter属于参数。
-        //
-        //有点问题啊，filter不是应该用parameters？
-        //从prototype来看，list用的是filter，edit、show用的是parameters[id]
+    const addedProp={}
+    if (presentation.uiElementRules?.exporter === false) {
+      addedProp.exporter = false;
+    }
+    if (presentation.uiElementRules?.checkbox === false) {
+      addedProp.bulkActionButtons=false
+      }
+      return (
+        <List
+          location={location}
+          basePath={basePath}
+          resource={resource}
+          hasCreate={false}
+          hasEdit={false}
+          hasList={false}
+          hasShow={false}
+          filter={filter}
+          //TODO filters没那么紧急，filter比较紧急，filter用来functions之间传递协作，filters用来用户输入。
+          // https://marmelab.com/react-admin/List.html#filters-filter-inputs
+          // functionModel里面没有filters，只有filter，原因如上所述。用户输入属于function实现的一部分，而filter属于参数。
+          //
+          //有点问题啊，filter不是应该用parameters？
+          //从prototype来看，list用的是filter，edit、show用的是parameters[id]
 
-        // filters={filters}
-        sort={sort}
-        {...props}
-      >
-        <Datagrid
-          rowClick={(selectedId) => {
-            // eslint-disable-next-line no-unused-expressions
-            const infoE = functionModel?.parameters?.out?.selectedChanged;
-            //TODO 支持更多的事件。
-            //TODO 如何综合到submit事件？ 等。
-            if (infoE) {
-              const eventName = getEventName(
-                model.original,
-                /\$\{(.*)\}/.exec(infoE)
-              );
-              const _ = props?.dispatch?.(
-                uiEventEmitAction(
-                  { selectedId },
-                  EVENT_NAME_SELECTED_CHANGED,
-                  eventName
-                )
-              );
-            }
-            setSelectedId(selectedId);
-            return;
-          }}
-          rowStyle={(record) => {
-            return record.id === selectedId
-              ? { backgroundColor: theme.palette.action.selected }
-              : undefined;
-          }}
+          // filters={filters}
+          sort={sort}
+          {...props}
+          {...addedProp}
         >
-          {listingFields(entity, model, presentation)}
-          {functionModel.links
-            ?.filter((link) => link.type === "entity")
-            ?.map((link) => {
-              const page = model.pageModel.pages.find(
-                (page) =>
-                  page.name === link.page ||
-                  page.name === `oneFunctionPage${link.page}`
-              );
-              if (page) {
-                return (
-                  <FunctionButton
-                    key={page.name}
-                    page={page}
-                    text={link.label}
-                  />
+          <Datagrid
+            rowClick={(selectedId) => {
+              // eslint-disable-next-line no-unused-expressions
+              const infoE = functionModel?.parameters?.out?.selectedChanged;
+              //TODO 支持更多的事件。
+              //TODO 如何综合到submit事件？ 等。
+              if (infoE) {
+                const eventName = getEventName(
+                  model.original,
+                  /\$\{(.*)\}/.exec(infoE)
                 );
-              } else {
-                return undefined;
+                const _ = props?.dispatch?.(
+                  uiEventEmitAction(
+                    { selectedId },
+                    EVENT_NAME_SELECTED_CHANGED,
+                    eventName
+                  )
+                );
               }
-            })}
-        </Datagrid>
-      </List>
-    );
+              setSelectedId(selectedId);
+              return;
+            }}
+            rowStyle={(record) => {
+              return record.id === selectedId
+                ? { backgroundColor: theme.palette.action.selected }
+                : undefined;
+            }}
+          >
+            {listingFields(entity, model, presentation)}
+            {functionModel.links
+              ?.filter((link) => link.type === "entity")
+              ?.map((link) => {
+                const page = model.pageModel.pages.find(
+                  (page) =>
+                    page.name === link.page ||
+                    page.name === `oneFunctionPage${link.page}`
+                );
+                if (page) {
+                  return (
+                    <FunctionButton
+                      key={page.name}
+                      page={page}
+                      text={link.label}
+                    />
+                  );
+                } else {
+                  return undefined;
+                }
+              })}
+          </Datagrid>
+        </List>
+      );
   };
   return FL;
 };

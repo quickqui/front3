@@ -18,6 +18,7 @@ import { FunctionShow } from "../View/FunctionShow";
 import { IconCardView } from "../View/IconCardView";
 import { findPresentation } from "../View/PresentationUtil";
 import {  resolveWithOutDefault } from "../Resolve";
+import OverrideTitle from "../View/OverrideTitle";
 
 export function getPage(page: Page, model: ModelWrapped, props: any) {
   //TODO 目前只考虑支持流式布局
@@ -114,7 +115,7 @@ function getByFunction(
           command: () => FunctionCommand,
           create: () => FunctionCreate,
           edit: () => FunctionEdit,
-          list: () => FunctionList(fun, model, presentation),
+          list: () => FunctionList(fun, model, presentation), //NOTE 需要关注event的，包括发出和监听，需要类似的调用。
           show: () => FunctionShow(fun, model, presentation),
           view: () => FunctionShow(fun, model, presentation),
           iconCard: () => IconCardView,
