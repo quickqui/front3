@@ -2,6 +2,7 @@
   "name": "@quick-qui/front3",
   "version": "2.5.2",
   "dependencies": {
+    "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "@quick-qui/data-provider": "^1.7.2",
     "@quick-qui/implementation-model": "^1.10.3",
