@@ -17,8 +17,9 @@ import { FunctionCommand } from "../View/FunctionCommand";
 import { FunctionShow } from "../View/FunctionShow";
 import { IconCardView } from "../View/IconCardView";
 import { findPresentation } from "../View/PresentationUtil";
-import {  resolveWithOutDefault } from "../Resolve";
+import { resolveWithOutDefault } from "../Resolve";
 import OverrideTitle from "../View/OverrideTitle";
+import { getGridItem, getGridTemplate } from "./GridLayout";
 
 export function getPage(page: Page, model: ModelWrapped, props: any) {
   //TODO 目前只考虑支持流式布局
@@ -34,12 +35,10 @@ export function getPage(page: Page, model: ModelWrapped, props: any) {
         presentation: compactList
  */
 
-  const grid = +(page?.layout?.["grid"] ?? 3);
   const gridStyle = {
     container: {
       display: "grid",
-      gridTemplateColumns: "auto ".repeat(grid).trim(),
-      // gridTemplateColumns: 'repeat(3,33.3%)'
+      ...getGridTemplate(page?.layout?.grid ?? {}),
     },
     item: {
       marginTop: "2em",
@@ -56,14 +55,10 @@ export function getPage(page: Page, model: ModelWrapped, props: any) {
             (fun: Function) => functionName === fun.name
           );
           if (fn) {
-            const size = place.layout?.size ?? 1;
             const itemStyle = {
-              gridColumn: `span ${size}`,
+              ...getGridItem(place.layout ?? {}),
             };
-            const presentation = findPresentation(
-              model,
-              place.presentation,
-            );
+            const presentation = findPresentation(model, place.presentation);
 
             return (
               <div
@@ -120,7 +115,7 @@ function getByFunction(
           view: () => FunctionShow(fun, model, presentation),
           iconCard: () => IconCardView,
         };
-        type = mapToType[name]
+        type = mapToType[name];
         if (!type) {
           throw new Error(`not supported function - ${name}`);
         }
